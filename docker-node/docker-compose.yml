@@ -16,6 +16,7 @@ services:
   
   node:
     container_name: node
+    entrypoint: dockerize -wait tcp://db:3306 -timeout 20s docker-entrypoint.sh
     restart: always
     build:
       context: ./node
@@ -23,10 +24,9 @@ services:
       - db
     networks:
       - default-network
-
+  
   db:
-    build: 
-      context: ./mysql
+    image: mysql:5.7
     container_name: db
     restart: always
     tty: true
@@ -37,7 +37,6 @@ services:
     environment:
       - MYSQL_DATABASE=nodedb
       - MYSQL_ROOT_PASSWORD=root
-      - MYSQL_USER=root
 
 networks:
   default-network:
